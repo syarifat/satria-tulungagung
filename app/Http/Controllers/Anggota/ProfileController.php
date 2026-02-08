@@ -34,6 +34,9 @@ class ProfileController extends Controller
             $desasUnit = Desa::where('kecamatan_id', $organisasiUnit->kecamatan_id)->get();
         }
 
+        // Ambil semua jabatan
+        $jabatans = \App\Models\Jabatan::orderBy('nama')->get();
+
         return view('anggota.profile.edit', compact(
             'user',
             'anggota',
@@ -41,7 +44,8 @@ class ProfileController extends Controller
             'desasDomisili',
             'organisasiUnit',
             'tingkatan',
-            'desasUnit'
+            'desasUnit',
+            'jabatans'
         ));
     }
 
@@ -54,6 +58,9 @@ class ProfileController extends Controller
         $anggota = Anggota::where('user_id', $user->id)->firstOrFail();
 
         $validated = $request->validate([
+            'nama' => 'required|string|max:100',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'jabatan_id' => 'required|exists:jabatans,id',
             'nik' => 'required|string|size:16|unique:anggotas,nik,' . $anggota->id,
             'nia_ansor' => 'nullable|string|max:50',
             'tempat_lahir' => 'required|string|max:100',
@@ -71,6 +78,10 @@ class ProfileController extends Controller
             'job_title' => 'nullable|string|max:100',
             'job_address' => 'nullable|string|max:255',
         ], [
+            'nama.required' => 'Nama lengkap wajib diisi',
+            'foto_profil.image' => 'File harus berupa gambar',
+            'foto_profil.max' => 'Ukuran foto maksimal 2MB',
+            'jabatan_id.required' => 'Jabatan wajib dipilih',
             'nik.required' => 'NIK wajib diisi',
             'nik.size' => 'NIK harus 16 digit',
             'nik.unique' => 'NIK sudah terdaftar',
@@ -102,9 +113,19 @@ class ProfileController extends Controller
                 ->withInput();
         }
 
+        // Handle file upload
+        $avatarPath = $anggota->url_foto; // Keep existing
+        if ($request->hasFile('foto_profil')) {
+            $path = $request->file('foto_profil')->store('avatars', 'public');
+            $avatarPath = asset('storage/' . $path);
+        }
+
         // Update data anggota
         $anggota->update([
             'organisasi_unit_id' => $organisasiUnit->id,
+            'jabatan_id' => $validated['jabatan_id'],
+            'nama' => $validated['nama'],
+            'url_foto' => $avatarPath,
             'nik' => $validated['nik'],
             'nia_ansor' => $validated['nia_ansor'],
             'tempat_lahir' => $validated['tempat_lahir'],
@@ -120,8 +141,10 @@ class ProfileController extends Controller
             'job_address' => $validated['job_address'],
         ]);
 
-        // Update juga organisasi unit di user
+        // Update juga organisasi unit, nama, avatar di user
         $user->update([
+            'nama' => $validated['nama'],
+            'avatar' => $avatarPath,
             'organisasi_unit_id' => $organisasiUnit->id,
         ]);
 

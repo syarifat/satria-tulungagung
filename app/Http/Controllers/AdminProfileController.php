@@ -27,12 +27,16 @@ class AdminProfileController extends Controller
         // Ambil data organisasi unit yang di-manage admin ini
         $organisasiUnit = OrganisasiUnit::find($user->organisasi_unit_id);
 
+        // Ambil semua jabatan
+        $jabatans = \App\Models\Jabatan::orderBy('nama')->get();
+
         return view('admin.profile.edit', compact(
             'user',
             'anggota',
             'kecamatans',
             'desasDomisili',
-            'organisasiUnit'
+            'organisasiUnit',
+            'jabatans'
         ));
     }
 
@@ -47,6 +51,9 @@ class AdminProfileController extends Controller
 
         $validated = $request->validate([
             // Data Pribadi
+            'nama' => 'required|string|max:100',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'jabatan_id' => 'required|exists:jabatans,id',
             'nik' => 'required|string|size:16|unique:anggotas,nik,' . $anggota->id,
             'nia_ansor' => 'nullable|string|max:50',
             'tempat_lahir' => 'required|string|max:100',
@@ -66,6 +73,10 @@ class AdminProfileController extends Controller
             'unit_email' => 'nullable|email|max:100',
             'unit_notelp' => 'nullable|string|max:20',
         ], [
+            'nama.required' => 'Nama lengkap wajib diisi',
+            'foto_profil.image' => 'File harus berupa gambar',
+            'foto_profil.max' => 'Ukuran foto maksimal 2MB',
+            'jabatan_id.required' => 'Jabatan wajib dipilih',
             'nik.required' => 'NIK wajib diisi',
             'nik.size' => 'NIK harus 16 digit',
             'nik.unique' => 'NIK sudah terdaftar',
@@ -78,9 +89,19 @@ class AdminProfileController extends Controller
             'desa_id.required' => 'Desa domisili wajib dipilih',
         ]);
 
-        DB::transaction(function () use ($anggota, $organisasiUnit, $validated) {
+        // Handle file upload
+        $avatarPath = $anggota->url_foto; // Keep existing
+        if ($request->hasFile('foto_profil')) {
+            $path = $request->file('foto_profil')->store('avatars', 'public');
+            $avatarPath = asset('storage/' . $path);
+        }
+
+        DB::transaction(function () use ($anggota, $organisasiUnit, $validated, $avatarPath) {
             // Update data anggota
             $anggota->update([
+                'nama' => $validated['nama'],
+                'url_foto' => $avatarPath,
+                'jabatan_id' => $validated['jabatan_id'],
                 'nik' => $validated['nik'],
                 'nia_ansor' => $validated['nia_ansor'],
                 'tempat_lahir' => $validated['tempat_lahir'],
@@ -94,6 +115,12 @@ class AdminProfileController extends Controller
                 'last_education' => $validated['last_education'],
                 'job_title' => $validated['job_title'],
                 'job_address' => $validated['job_address'],
+            ]);
+
+            // Update user (nama & avatar)
+            $anggota->user->update([
+                'nama' => $validated['nama'],
+                'avatar' => $avatarPath,
             ]);
 
             // Update data organisasi unit

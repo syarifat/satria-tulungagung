@@ -133,9 +133,10 @@ class GoogleAuthController extends Controller
         }
 
         $kecamatans = Kecamatan::orderBy('nama')->get();
-        // Default register as anggota
+        // Ambil semua jabatan
+        $jabatans = \App\Models\Jabatan::orderBy('nama')->get();
 
-        return view('auth.complete-profile', compact('user', 'kecamatans'));
+        return view('auth.complete-profile', compact('user', 'kecamatans', 'jabatans'));
     }
 
     /**
@@ -150,6 +151,9 @@ class GoogleAuthController extends Controller
         $userRole = 'anggota';
 
         $validated = $request->validate([
+            'nama' => 'required|string|max:100',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'jabatan_id' => 'required|exists:jabatans,id',
             'nik' => 'required|string|size:16|unique:anggotas,nik',
             'nia_ansor' => 'nullable|string|max:50',
             'tempat_lahir' => 'required|string|max:100',
@@ -170,6 +174,10 @@ class GoogleAuthController extends Controller
             'job_title' => 'nullable|string|max:100',
             'job_address' => 'nullable|string|max:255',
         ], [
+            'nama.required' => 'Nama lengkap wajib diisi',
+            'foto_profil.image' => 'File harus berupa gambar',
+            'foto_profil.max' => 'Ukuran foto maksimal 2MB',
+            'jabatan_id.required' => 'Jabatan wajib dipilih',
             'nik.required' => 'NIK wajib diisi',
             'nik.size' => 'NIK harus 16 digit',
             'nik.unique' => 'NIK sudah terdaftar',
@@ -201,8 +209,17 @@ class GoogleAuthController extends Controller
                 ->withInput();
         }
 
-        // Update user dengan organisasi unit dan role
+        // Handle file upload
+        $avatarPath = $user->avatar; // Default keep existing avatar
+        if ($request->hasFile('foto_profil')) {
+            $path = $request->file('foto_profil')->store('avatars', 'public');
+            $avatarPath = asset('storage/' . $path);
+        }
+
+        // Update user dengan organisasi unit dan role, nama, dan avatar
         $user->update([
+            'nama' => $validated['nama'],
+            'avatar' => $avatarPath,
             'organisasi_unit_id' => $organisasiUnit->id,
             'role' => $userRole,
         ]);
@@ -211,10 +228,11 @@ class GoogleAuthController extends Controller
         Anggota::create([
             'user_id' => $user->id,
             'organisasi_unit_id' => $organisasiUnit->id,
-            'jabatan_id' => 10, // Default: Anggota (sesuaikan ID-nya jika perlu, misal ambil dari DB)
+            'jabatan_id' => $validated['jabatan_id'],
             'nik' => $validated['nik'],
             'nia_ansor' => $validated['nia_ansor'],
-            'nama' => $user->nama,
+            'nama' => $validated['nama'],
+            'url_foto' => $avatarPath,
             'tempat_lahir' => $validated['tempat_lahir'],
             'tanggal_lahir' => $validated['tanggal_lahir'],
             'kelamin' => $validated['kelamin'],

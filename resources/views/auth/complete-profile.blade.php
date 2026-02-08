@@ -89,7 +89,7 @@
             </div>
             @endif
 
-            <form method="POST" action="{{ route('complete-profile.store') }}" class="p-8 md:p-10 bg-white space-y-8">
+            <form method="POST" action="{{ route('complete-profile.store') }}" enctype="multipart/form-data" class="p-8 md:p-10 bg-white space-y-8">
                 @csrf
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -99,6 +99,38 @@
                         <div class="flex items-center gap-2 border-b border-gray-100 pb-2 mb-4">
                             <div class="h-8 w-1 bg-emerald-500 rounded-full"></div>
                             <h3 class="text-sm font-black text-emerald-600 uppercase tracking-widest">1. Data Pribadi</h3>
+                        </div>
+
+                        {{-- NAMA & FOTO --}}
+                        <div class="space-y-5">
+                            <div class="flex flex-col items-center gap-4 mb-6">
+                                <div class="relative group">
+                                    @if($user->avatar)
+                                    <img id="avatar-preview" src="{{ $user->avatar }}" alt="Profile" class="h-24 w-24 rounded-full border-4 border-emerald-500 shadow-lg object-cover">
+                                    @else
+                                    <div id="avatar-placeholder" class="h-24 w-24 rounded-full bg-emerald-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                                        {{ strtoupper(substr($user->nama, 0, 1)) }}
+                                    </div>
+                                    <img id="avatar-preview" class="h-24 w-24 rounded-full border-4 border-emerald-500 shadow-lg object-cover hidden">
+                                    @endif
+
+                                    <label for="foto_profil" class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md border border-gray-200 cursor-pointer hover:bg-emerald-50 transition-colors">
+                                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    </label>
+                                    <input type="file" id="foto_profil" name="foto_profil" class="hidden" accept="image/*" onchange="previewImage(this)">
+                                </div>
+                                <p class="text-[10px] text-slate-400 font-medium">Klik kamera untuk ubah foto</p>
+                            </div>
+
+                            {{-- NAMA LENGKAP --}}
+                            <div class="space-y-1.5">
+                                <label class="block font-bold text-xs text-slate-700 ml-1">Nama Lengkap <span class="text-rose-500">*</span></label>
+                                <input class="block w-full {{ $errors->has('nama') ? 'border-rose-500' : 'border-gray-200' }} bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
+                                    type="text" name="nama" value="{{ old('nama', $user->nama) }}" required placeholder="Nama Lengkap Sesuai KTP">
+                            </div>
                         </div>
 
                         {{-- NIK --}}
@@ -230,6 +262,17 @@
                             </div>
                         </div>
 
+                        {{-- JABATAN --}}
+                        <div class="space-y-1.5">
+                            <label class="block font-bold text-xs text-slate-700 ml-1">Jabatan dalam Organisasi <span class="text-rose-500">*</span></label>
+                            <select name="jabatan_id" required class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
+                                <option value="" selected disabled>Pilih Jabatan...</option>
+                                @foreach($jabatans as $jab)
+                                <option value="{{ $jab->id }}" {{ old('jabatan_id') == $jab->id ? 'selected' : '' }}>{{ $jab->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         {{-- PENDIDIKAN & PEKERJAAN --}}
                         <div class="space-y-5">
                             <div class="flex items-center gap-2 border-b border-gray-100 pb-2 mb-4">
@@ -355,6 +398,23 @@
             return str.replace(/\w\S*/g, function(txt) {
                 return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             });
+        }
+
+        function previewImage(input) {
+            const preview = document.getElementById('avatar-preview');
+            const placeholder = document.getElementById('avatar-placeholder');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    if (placeholder) placeholder.classList.add('hidden');
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>
 </body>
