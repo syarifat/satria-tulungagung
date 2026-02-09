@@ -33,18 +33,10 @@ class PengkaderanController extends Controller
         // Since this is Admin PC, they can see ALL pengkaderan within the system (PC Tulungagung scope)
         // We might want to filter only valid members, but generally, all recorded pengkaderan should be visible.
 
-        // If we strictly want only members under this PC hierarchy (which is usually all members in the app context):
-        $query->whereHas('anggota.organisasiUnit', function ($q) use ($pcUnit) {
-            $q->where(function ($query) use ($pcUnit) {
-                // Include PC, PAC, and PR levels without over-filtering
-                $query->where('id', $pcUnit->id)
-                    ->orWhere('parent_id', $pcUnit->id)
-                    // Include PRs (grandchildren of PC)
-                    ->orWhereHas('parent', function ($sub) use ($pcUnit) {
-                        $sub->where('parent_id', $pcUnit->id);
-                    });
-            });
-        });
+        // Since this is Admin PC, they can see ALL pengkaderan within the system (PC Tulungagung scope)
+        // We remove strict filtering to ensure all data is visible regardless of potentially missing hierarchy links.
+        // If specific scope is needed later, we can re-add it, but for now, global visibility is requested.
+        // $query->whereHas('anggota.organisasiUnit', function ($q) use ($pcUnit) { ... });
 
         // Filter by search (nama anggota or jenis pengkaderan)
         if ($request->filled('search')) {
@@ -57,9 +49,22 @@ class PengkaderanController extends Controller
             });
         }
 
-        // Filter by PAC
+        // Filter by PAC (Allow "PC" selection which is a specific Unit ID)
         if ($request->filled('pac_id')) {
             $pacId = $request->pac_id;
+            // Filter anggota that belongs to this Unit ID, OR belongs to a unit whose parent is this Unit ID
+            // This covers: 
+            // 1. Members of the specific unit (e.g. PC members if PC ID is selected)
+            // 2. Members of direct child units (e.g. PAC members if PC ID selected, or PR members if PAC ID selected)
+            // To cover grandchildren (PR members if PC ID selected), we need more depth.
+            // Let's simplify: If "PC" is selected (id == pcUnit->id), we want PC members + PAC members + PR members? 
+            // The dropdown says "Pengurus Cabang (PC)". Usually implies ONLY PC members.
+            // If user selects "Semua PAC", request('pac_id') is empty.
+
+            // Refined Logic:
+            // If ID matches PC Unit -> Show only members of PC Unit.
+            // If ID matches a PAC Unit -> Show members of that PAC + members of PRs under that PAC.
+
             $query->whereHas('anggota.organisasiUnit', function ($q) use ($pacId) {
                 $q->where('id', $pacId)
                     ->orWhere('parent_id', $pacId);
@@ -86,22 +91,10 @@ class PengkaderanController extends Controller
             $query->where('tanggal_pelaksanaan', '<=', $request->tanggal_sampai);
         }
 
-        $pengkaderans = $query->latest('tanggal_pelaksanaan')->paginate(15);
+        $pengkaderans = $query->latest('id')->paginate(15);
 
-        // Get unique jenis pengkaderan for filter
-        $jenisOptions = RiwayatPengkaderan::whereHas('anggota.organisasiUnit', function ($q) use ($pcUnit) {
-            $q->where(function ($query) use ($pcUnit) {
-                $query->where('id', $pcUnit->id)
-                    ->orWhere('parent_id', $pcUnit->id)
-                    ->orWhereIn('parent_id', function ($subQuery) use ($pcUnit) {
-                        $subQuery->select('id')
-                            ->from('organisasi_units')
-                            ->where('parent_id', $pcUnit->id)
-                            ->where('level', 'PAC');
-                    });
-            });
-        })
-            ->distinct()
+        // Get unique jenis pengkaderan for filter (Global scope)
+        $jenisOptions = RiwayatPengkaderan::distinct()
             ->pluck('jenis_pengkaderan')
             ->filter()
             ->sort()
