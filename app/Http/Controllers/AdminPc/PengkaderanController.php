@@ -111,13 +111,25 @@ class PengkaderanController extends Controller
     public function show(RiwayatPengkaderan $pengkaderan)
     {
         $user = Auth::user();
-        $pcUnit = $user->organisasiUnit;
-
         // Verify access
-        $anggotaUnit = $pengkaderan->anggota->organisasiUnit;
-        $hasAccess = $anggotaUnit->id == $pcUnit->id
-            || $anggotaUnit->parent_id == $pcUnit->id
-            || optional($anggotaUnit->parent)->parent_id == $pcUnit->id;
+        // Since this is Admin PC, we want to allow viewing all records that appear in the index.
+        // The index displays "global" scope for Admin PC, so the show method must also allow it.
+        // We bypass strict hierarchy checks for Admin PC to prevent 403 on valid data that might have missing parent links.
+
+        $hasAccess = false;
+
+        if ($user->role === 'admin_pc') {
+            $hasAccess = true;
+        } else {
+            // Fallback for strict checks if we ever reuse this controller for other roles
+            // blocking unauthorized access for non-PC admins if logic changes
+            $anggotaUnit = $pengkaderan->anggota->organisasiUnit;
+            if ($anggotaUnit) {
+                $hasAccess = $anggotaUnit->id == $pcUnit->id
+                    || $anggotaUnit->parent_id == $pcUnit->id
+                    || optional($anggotaUnit->parent)->parent_id == $pcUnit->id;
+            }
+        }
 
         if (!$hasAccess) {
             abort(403);
