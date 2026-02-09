@@ -324,6 +324,44 @@
                                 <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
                                     type="text" name="job_address" value="{{ old('job_address') }}" placeholder="Kota atau Alamat Tempat Bekerja">
                             </div>
+
+                            {{-- DATA USAHA --}}
+                            <div class="space-y-5 pt-4 border-t border-gray-100">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="h-8 w-1 bg-emerald-500 rounded-full"></div>
+                                    <h3 class="text-sm font-black text-emerald-600 uppercase tracking-widest">5. Data Usaha</h3>
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label class="block font-bold text-xs text-slate-700 ml-1">Bidang Usaha</label>
+                                    <select name="business_sector" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
+                                        <option value="" selected disabled>Pilih Bidang Usaha...</option>
+                                        <option value="Pertanian" {{ old('business_sector') == 'Pertanian' ? 'selected' : '' }}>Pertanian</option>
+                                        <option value="Peternakan" {{ old('business_sector') == 'Peternakan' ? 'selected' : '' }}>Peternakan</option>
+                                        <option value="Perikanan" {{ old('business_sector') == 'Perikanan' ? 'selected' : '' }}>Perikanan</option>
+                                        <option value="Perkebunan" {{ old('business_sector') == 'Perkebunan' ? 'selected' : '' }}>Perkebunan</option>
+                                        <option value="Jasa" {{ old('business_sector') == 'Jasa' ? 'selected' : '' }}>Jasa</option>
+                                        <option value="Perdagangan" {{ old('business_sector') == 'Perdagangan' ? 'selected' : '' }}>Perdagangan</option>
+                                        <option value="Industri Kreatif" {{ old('business_sector') == 'Industri Kreatif' ? 'selected' : '' }}>Industri Kreatif</option>
+                                        <option value="Teknologi" {{ old('business_sector') == 'Teknologi' ? 'selected' : '' }}>Teknologi</option>
+                                        <option value="Pariwisata" {{ old('business_sector') == 'Pariwisata' ? 'selected' : '' }}>Pariwisata</option>
+                                        <option value="Lainnya" {{ old('business_sector') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                    </select>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-1.5">
+                                        <label class="block font-bold text-xs text-slate-700 ml-1">Jenis Usaha</label>
+                                        <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
+                                            type="text" name="business_type" value="{{ old('business_type') }}" placeholder="Contoh: Ternak Lele, Jual Beli HP, dll">
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label class="block font-bold text-xs text-slate-700 ml-1">Minat Usaha <span class="text-[10px] text-slate-400 font-normal italic">(Bagi yang belum punya usaha)</span></label>
+                                        <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
+                                            type="text" name="business_interest" value="{{ old('business_interest') }}" placeholder="Tertarik usaha apa?">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

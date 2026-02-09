@@ -173,6 +173,11 @@ class GoogleAuthController extends Controller
             'last_education' => 'nullable|string|max:50',
             'job_title' => 'nullable|string|max:100',
             'job_address' => 'nullable|string|max:255',
+
+            // Data Usaha
+            'business_sector' => 'nullable|string|max:100',
+            'business_type' => 'nullable|string|max:100',
+            'business_interest' => 'nullable|string|max:100',
         ], [
             'nama.required' => 'Nama lengkap wajib diisi',
             'foto_profil.image' => 'File harus berupa gambar',
@@ -246,6 +251,9 @@ class GoogleAuthController extends Controller
             'last_education' => $validated['last_education'],
             'job_title' => $validated['job_title'],
             'job_address' => $validated['job_address'],
+            'business_sector' => $validated['business_sector'],
+            'business_type' => $validated['business_type'],
+            'business_interest' => $validated['business_interest'],
         ]);
 
         // Clear session (just in case)

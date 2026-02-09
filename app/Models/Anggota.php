@@ -7,11 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 class Anggota extends Model
 {
     protected $fillable = [
-        'user_id', 'organisasi_unit_id', 'jabatan_id',
-        'nik', 'nia_ansor', 'nama', 'tempat_lahir', 'tanggal_lahir',
-        'kelamin', 'status_kawin', 'notelp', 'url_foto',
-        'alamat', 'kecamatan_id', 'desa_id',
-        'last_education', 'job_title', 'job_address'
+        'user_id',
+        'organisasi_unit_id',
+        'jabatan_id',
+        'nik',
+        'nia_ansor',
+        'nama',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'kelamin',
+        'status_kawin',
+        'notelp',
+        'url_foto',
+        'alamat',
+        'kecamatan_id',
+        'desa_id',
+        'last_education',
+        'job_title',
+        'job_address',
+        'business_sector',
+        'business_type',
+        'business_interest'
     ];
 
     protected $casts = [
