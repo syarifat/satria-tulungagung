@@ -166,8 +166,8 @@ class GoogleAuthController extends Controller
             'desa_id' => 'required|exists:desas,id',
 
             // Kaderisasi (Unit Organisasi tempat dia bernaung)
-            'tingkatan_organisasi' => 'required|in:pac,pr',
-            'unit_kecamatan_id' => 'required|exists:kecamatans,id',
+            'tingkatan_organisasi' => 'required|in:pac,pr,pc',
+            'unit_kecamatan_id' => 'nullable|exists:kecamatans,id|required_if:tingkatan_organisasi,pac',
             'unit_desa_id' => 'nullable|exists:desas,id|required_if:tingkatan_organisasi,pr',
 
             'last_education' => 'nullable|string|max:50',
@@ -189,12 +189,14 @@ class GoogleAuthController extends Controller
             'kecamatan_id.required' => 'Kecamatan domisili wajib dipilih',
             'desa_id.required' => 'Desa domisili wajib dipilih',
             'tingkatan_organisasi.required' => 'Tingkatan organisasi wajib dipilih',
-            'unit_kecamatan_id.required' => 'PAC (Kecamatan) wajib dipilih',
+            'unit_kecamatan_id.required_if' => 'PAC (Kecamatan) wajib dipilih untuk tingkat PAC',
             'unit_desa_id.required_if' => 'PR (Desa) wajib dipilih untuk tingkat Ranting',
         ]);
 
         // Cari organisasi unit berdasarkan pilihan (Tempat Kaderisasi)
-        if ($validated['tingkatan_organisasi'] === 'pac') {
+        if ($validated['tingkatan_organisasi'] === 'pc') {
+            $organisasiUnit = OrganisasiUnit::where('level', 'pc')->first();
+        } elseif ($validated['tingkatan_organisasi'] === 'pac') {
             $organisasiUnit = OrganisasiUnit::where('level', 'pac')
                 ->where('kecamatan_id', $validated['unit_kecamatan_id'])
                 ->first();

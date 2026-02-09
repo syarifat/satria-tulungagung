@@ -237,6 +237,7 @@
                                     <option value="" selected disabled>Pilih Tingkatan...</option>
                                     <option value="pac" {{ old('tingkatan_organisasi') == 'pac' ? 'selected' : '' }}>Pimpinan Anak Cabang (Kecamatan)</option>
                                     <option value="pr" {{ old('tingkatan_organisasi') == 'pr' ? 'selected' : '' }}>Pimpinan Ranting (Desa)</option>
+                                    <option value="pc" {{ old('tingkatan_organisasi') == 'pc' ? 'selected' : '' }}>Pimpinan Cabang (PC)</option>
                                 </select>
                             </div>
 
@@ -258,6 +259,18 @@
                                     <select id="unit_desa" name="unit_desa_id" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
                                         <option value="" selected disabled>Pilih PAC Dulu...</option>
                                     </select>
+                                </div>
+
+                                {{-- PC INFO --}}
+                                <div id="wrapper_pc" class="hidden col-span-2 space-y-1.5">
+                                    <label class="block font-bold text-xs text-slate-700 ml-1">Unit Organisasi <span class="text-rose-500">*</span></label>
+                                    <div class="w-full border-emerald-500 border-2 bg-emerald-50 text-emerald-700 rounded-xl shadow-sm py-3 px-4 text-sm font-bold flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        PC GP Ansor Tulungagung
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 ml-1">Anda akan terdaftar sebagai anggota Pimpinan Cabang.</p>
                                 </div>
                             </div>
                         </div>
@@ -349,12 +362,15 @@
             const tingkatan = document.getElementById('tingkatan_organisasi').value;
             const wrapperPac = document.getElementById('wrapper_pac');
             const wrapperPr = document.getElementById('wrapper_pr');
+            const wrapperPc = document.getElementById('wrapper_pc');
             const selectPac = document.getElementById('unit_kecamatan');
             const selectPr = document.getElementById('unit_desa');
 
             // Reset tampilan & required
             wrapperPac.classList.add('hidden');
             wrapperPr.classList.add('hidden');
+            if (wrapperPc) wrapperPc.classList.add('hidden');
+
             selectPac.removeAttribute('required');
             selectPr.removeAttribute('required');
 
@@ -366,6 +382,8 @@
                 wrapperPr.classList.remove('hidden');
                 selectPac.setAttribute('required', 'required');
                 selectPr.setAttribute('required', 'required');
+            } else if (tingkatan === 'pc') {
+                if (wrapperPc) wrapperPc.classList.remove('hidden');
             }
         }
 
