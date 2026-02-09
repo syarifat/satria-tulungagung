@@ -238,25 +238,25 @@
                                 </svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Pekerjaan</p>
-                                <p class="font-bold text-slate-800">{{ $anggota->job_title ?? '-' }}</p>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Bidang & Jenis Usaha</p>
+                                <p class="font-bold text-slate-800">{{ $anggota->business_sector ?? '-' }}</p>
+                                @if($anggota->business_type)
+                                <p class="text-sm text-slate-600 mt-1 italic">"{{ $anggota->business_type }}"</p>
+                                @endif
                             </div>
                         </div>
 
-                        @if($anggota->job_address)
                         <div class="flex items-start gap-4">
                             <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 shrink-0">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                                 </svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Alamat Kantor/Usaha</p>
-                                <p class="font-medium text-slate-800">{{ $anggota->job_address }}</p>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Minat Usaha</p>
+                                <p class="font-bold text-slate-800">{{ $anggota->business_interest ?? '-' }}</p>
                             </div>
                         </div>
-                        @endif
                     </div>
                 </div>
 
