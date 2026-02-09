@@ -297,10 +297,17 @@
                                 <div class="space-y-1.5">
                                     <label class="block font-bold text-xs text-slate-700 ml-1">Pendidikan Terakhir</label>
                                     <select name="last_education" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
+                                        <option value="" disabled selected>Pilih Pendidikan Terakhir</option>
+                                        <option value="SD" {{ old('last_education') == 'SD' ? 'selected' : '' }}>SD/Sederajat</option>
+                                        <option value="SMP" {{ old('last_education') == 'SMP' ? 'selected' : '' }}>SMP/Sederajat</option>
                                         <option value="SMA" {{ old('last_education') == 'SMA' ? 'selected' : '' }}>SMA/Sederajat</option>
-                                        <option value="D3" {{ old('last_education') == 'D3' ? 'selected' : '' }}>Diploma (D3)</option>
+                                        <option value="D1" {{ old('last_education') == 'D1' ? 'selected' : '' }}>Diploma I (D1)</option>
+                                        <option value="D2" {{ old('last_education') == 'D2' ? 'selected' : '' }}>Diploma II (D2)</option>
+                                        <option value="D3" {{ old('last_education') == 'D3' ? 'selected' : '' }}>Diploma III (D3)</option>
+                                        <option value="D4" {{ old('last_education') == 'D4' ? 'selected' : '' }}>Diploma IV (D4)</option>
                                         <option value="S1" {{ old('last_education') == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
                                         <option value="S2" {{ old('last_education') == 'S2' ? 'selected' : '' }}>Magister (S2)</option>
+                                        <option value="S3" {{ old('last_education') == 'S3' ? 'selected' : '' }}>Doktor (S3)</option>
                                         <option value="Pesantren" {{ old('last_education') == 'Pesantren' ? 'selected' : '' }}>Pesantren</option>
                                         <option value="Lainnya" {{ old('last_education') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                                     </select>
