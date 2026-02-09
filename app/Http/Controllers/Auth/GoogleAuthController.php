@@ -171,8 +171,6 @@ class GoogleAuthController extends Controller
             'unit_desa_id' => 'nullable|exists:desas,id|required_if:tingkatan_organisasi,pr',
 
             'last_education' => 'nullable|string|max:50',
-            'job_title' => 'nullable|string|max:100',
-            'job_address' => 'nullable|string|max:255',
 
             // Data Usaha
             'business_sector' => 'nullable|string|max:100',
@@ -249,8 +247,6 @@ class GoogleAuthController extends Controller
             'kecamatan_id' => $validated['kecamatan_id'],
             'desa_id' => $validated['desa_id'],
             'last_education' => $validated['last_education'],
-            'job_title' => $validated['job_title'],
-            'job_address' => $validated['job_address'],
             'business_sector' => $validated['business_sector'],
             'business_type' => $validated['business_type'],
             'business_interest' => $validated['business_interest'],

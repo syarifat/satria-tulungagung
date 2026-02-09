@@ -290,76 +290,55 @@
                         <div class="space-y-5">
                             <div class="flex items-center gap-2 border-b border-gray-100 pb-2 mb-4">
                                 <div class="h-8 w-1 bg-emerald-500 rounded-full"></div>
-                                <h3 class="text-sm font-black text-emerald-600 uppercase tracking-widest">4. Pendidikan & Pekerjaan</h3>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="space-y-1.5">
-                                    <label class="block font-bold text-xs text-slate-700 ml-1">Pendidikan Terakhir</label>
-                                    <select name="last_education" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
-                                        <option value="" disabled selected>Pilih Pendidikan Terakhir</option>
-                                        <option value="SD" {{ old('last_education') == 'SD' ? 'selected' : '' }}>SD/Sederajat</option>
-                                        <option value="SMP" {{ old('last_education') == 'SMP' ? 'selected' : '' }}>SMP/Sederajat</option>
-                                        <option value="SMA" {{ old('last_education') == 'SMA' ? 'selected' : '' }}>SMA/Sederajat</option>
-                                        <option value="D1" {{ old('last_education') == 'D1' ? 'selected' : '' }}>Diploma I (D1)</option>
-                                        <option value="D2" {{ old('last_education') == 'D2' ? 'selected' : '' }}>Diploma II (D2)</option>
-                                        <option value="D3" {{ old('last_education') == 'D3' ? 'selected' : '' }}>Diploma III (D3)</option>
-                                        <option value="D4" {{ old('last_education') == 'D4' ? 'selected' : '' }}>Diploma IV (D4)</option>
-                                        <option value="S1" {{ old('last_education') == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
-                                        <option value="S2" {{ old('last_education') == 'S2' ? 'selected' : '' }}>Magister (S2)</option>
-                                        <option value="S3" {{ old('last_education') == 'S3' ? 'selected' : '' }}>Doktor (S3)</option>
-                                        <option value="Pesantren" {{ old('last_education') == 'Pesantren' ? 'selected' : '' }}>Pesantren</option>
-                                        <option value="Lainnya" {{ old('last_education') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                    </select>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="block font-bold text-xs text-slate-700 ml-1">Pekerjaan Utama</label>
-                                    <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
-                                        type="text" name="job_title" value="{{ old('job_title') }}" placeholder="Guru, Petani, dll">
-                                </div>
+                                <h3 class="text-sm font-black text-emerald-600 uppercase tracking-widest">4. Pendidikan & Ekonomi</h3>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block font-bold text-xs text-slate-700 ml-1">Alamat Kantor/Usaha (Opsional)</label>
-                                <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
-                                    type="text" name="job_address" value="{{ old('job_address') }}" placeholder="Kota atau Alamat Tempat Bekerja">
+                                <label class="block font-bold text-xs text-slate-700 ml-1">Pendidikan Terakhir</label>
+                                <select name="last_education" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
+                                    <option value="" disabled selected>Pilih Pendidikan Terakhir</option>
+                                    <option value="SD" {{ old('last_education') == 'SD' ? 'selected' : '' }}>SD/Sederajat</option>
+                                    <option value="SMP" {{ old('last_education') == 'SMP' ? 'selected' : '' }}>SMP/Sederajat</option>
+                                    <option value="SMA" {{ old('last_education') == 'SMA' ? 'selected' : '' }}>SMA/Sederajat</option>
+                                    <option value="D1" {{ old('last_education') == 'D1' ? 'selected' : '' }}>Diploma I (D1)</option>
+                                    <option value="D2" {{ old('last_education') == 'D2' ? 'selected' : '' }}>Diploma II (D2)</option>
+                                    <option value="D3" {{ old('last_education') == 'D3' ? 'selected' : '' }}>Diploma III (D3)</option>
+                                    <option value="D4" {{ old('last_education') == 'D4' ? 'selected' : '' }}>Diploma IV (D4)</option>
+                                    <option value="S1" {{ old('last_education') == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
+                                    <option value="S2" {{ old('last_education') == 'S2' ? 'selected' : '' }}>Magister (S2)</option>
+                                    <option value="S3" {{ old('last_education') == 'S3' ? 'selected' : '' }}>Doktor (S3)</option>
+                                    <option value="Pesantren" {{ old('last_education') == 'Pesantren' ? 'selected' : '' }}>Pesantren</option>
+                                    <option value="Lainnya" {{ old('last_education') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                </select>
                             </div>
 
-                            {{-- DATA USAHA --}}
-                            <div class="space-y-5 pt-4 border-t border-gray-100">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <div class="h-8 w-1 bg-emerald-500 rounded-full"></div>
-                                    <h3 class="text-sm font-black text-emerald-600 uppercase tracking-widest">5. Data Usaha</h3>
-                                </div>
+                            <div class="space-y-1.5 pt-4">
+                                <label class="block font-bold text-xs text-slate-700 ml-1">Bidang Usaha</label>
+                                <select name="business_sector" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
+                                    <option value="" selected disabled>Pilih Bidang Usaha...</option>
+                                    <option value="Pertanian" {{ old('business_sector') == 'Pertanian' ? 'selected' : '' }}>Pertanian</option>
+                                    <option value="Peternakan" {{ old('business_sector') == 'Peternakan' ? 'selected' : '' }}>Peternakan</option>
+                                    <option value="Perikanan" {{ old('business_sector') == 'Perikanan' ? 'selected' : '' }}>Perikanan</option>
+                                    <option value="Perkebunan" {{ old('business_sector') == 'Perkebunan' ? 'selected' : '' }}>Perkebunan</option>
+                                    <option value="Jasa" {{ old('business_sector') == 'Jasa' ? 'selected' : '' }}>Jasa</option>
+                                    <option value="Perdagangan" {{ old('business_sector') == 'Perdagangan' ? 'selected' : '' }}>Perdagangan</option>
+                                    <option value="Industri Kreatif" {{ old('business_sector') == 'Industri Kreatif' ? 'selected' : '' }}>Industri Kreatif</option>
+                                    <option value="Teknologi" {{ old('business_sector') == 'Teknologi' ? 'selected' : '' }}>Teknologi</option>
+                                    <option value="Pariwisata" {{ old('business_sector') == 'Pariwisata' ? 'selected' : '' }}>Pariwisata</option>
+                                    <option value="Lainnya" {{ old('business_sector') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                </select>
+                            </div>
 
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
-                                    <label class="block font-bold text-xs text-slate-700 ml-1">Bidang Usaha</label>
-                                    <select name="business_sector" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
-                                        <option value="" selected disabled>Pilih Bidang Usaha...</option>
-                                        <option value="Pertanian" {{ old('business_sector') == 'Pertanian' ? 'selected' : '' }}>Pertanian</option>
-                                        <option value="Peternakan" {{ old('business_sector') == 'Peternakan' ? 'selected' : '' }}>Peternakan</option>
-                                        <option value="Perikanan" {{ old('business_sector') == 'Perikanan' ? 'selected' : '' }}>Perikanan</option>
-                                        <option value="Perkebunan" {{ old('business_sector') == 'Perkebunan' ? 'selected' : '' }}>Perkebunan</option>
-                                        <option value="Jasa" {{ old('business_sector') == 'Jasa' ? 'selected' : '' }}>Jasa</option>
-                                        <option value="Perdagangan" {{ old('business_sector') == 'Perdagangan' ? 'selected' : '' }}>Perdagangan</option>
-                                        <option value="Industri Kreatif" {{ old('business_sector') == 'Industri Kreatif' ? 'selected' : '' }}>Industri Kreatif</option>
-                                        <option value="Teknologi" {{ old('business_sector') == 'Teknologi' ? 'selected' : '' }}>Teknologi</option>
-                                        <option value="Pariwisata" {{ old('business_sector') == 'Pariwisata' ? 'selected' : '' }}>Pariwisata</option>
-                                        <option value="Lainnya" {{ old('business_sector') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                    </select>
+                                    <label class="block font-bold text-xs text-slate-700 ml-1">Jenis Usaha</label>
+                                    <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
+                                        type="text" name="business_type" value="{{ old('business_type') }}" placeholder="Contoh: Ternak Lele, Jual Beli HP, dll">
                                 </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="space-y-1.5">
-                                        <label class="block font-bold text-xs text-slate-700 ml-1">Jenis Usaha</label>
-                                        <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
-                                            type="text" name="business_type" value="{{ old('business_type') }}" placeholder="Contoh: Ternak Lele, Jual Beli HP, dll">
-                                    </div>
-                                    <div class="space-y-1.5">
-                                        <label class="block font-bold text-xs text-slate-700 ml-1">Minat Usaha <span class="text-[10px] text-slate-400 font-normal italic">(Bagi yang belum punya usaha)</span></label>
-                                        <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
-                                            type="text" name="business_interest" value="{{ old('business_interest') }}" placeholder="Tertarik usaha apa?">
-                                    </div>
+                                <div class="space-y-1.5">
+                                    <label class="block font-bold text-xs text-slate-700 ml-1">Minat Usaha <span class="text-[10px] text-slate-400 font-normal italic">(Bagi yang belum punya usaha)</span></label>
+                                    <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
+                                        type="text" name="business_interest" value="{{ old('business_interest') }}" placeholder="Tertarik usaha apa?">
                                 </div>
                             </div>
                         </div>

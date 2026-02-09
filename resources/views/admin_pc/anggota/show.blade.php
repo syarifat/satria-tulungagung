@@ -95,11 +95,7 @@
                             <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Pendidikan Terakhir</p>
                             <p class="font-bold text-slate-800">{{ $anggota->last_education ?? '-' }}</p>
                         </div>
-                        <div class="group">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Pekerjaan</p>
-                            <p class="font-bold text-slate-800">{{ $anggota->job_title ?? '-' }}</p>
-                            <p class="text-xs text-slate-500">{{ $anggota->job_address ?? '' }}</p>
-                        </div>
+
                         <div class="pt-4 border-t border-dashed border-gray-200">
                             <p class="text-[10px] text-slate-400 font-bold uppercase mb-2">Data Usaha & Ekonomi</p>
                             <div class="grid grid-cols-2 gap-4 mb-3">

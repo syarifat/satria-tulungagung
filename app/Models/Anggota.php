@@ -23,8 +23,6 @@ class Anggota extends Model
         'kecamatan_id',
         'desa_id',
         'last_education',
-        'job_title',
-        'job_address',
         'business_sector',
         'business_type',
         'business_interest'
