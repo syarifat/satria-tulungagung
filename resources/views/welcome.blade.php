@@ -44,7 +44,8 @@
             <div class="flex justify-between items-center h-16 md:h-20">
 
                 <div class="flex items-center gap-3 shrink-0">
-                    <img src="{{ asset('img/logo-view.png') }}" class="h-8 md:h-10 w-auto" alt="Logo">
+                    <img src="{{ asset('img/logo-view.png') }}" class="h-8 md:h-10 w-auto" alt="Logo Satria">
+                    
                     <div class="flex flex-col">
                         <span class="font-heading font-black text-lg md:text-xl leading-none tracking-tight text-slate-900">SATRIA</span>
                         <span class="text-[0.6rem] md:text-[0.65rem] font-bold tracking-[0.2em] text-emerald-600 uppercase">Tulungagung</span>
@@ -97,8 +98,23 @@
         </div>
     </nav>
 
-    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 overflow-hidden">
+    <header class="relative pt-28 pb-20 lg:pt-40 lg:pb-32 px-4 overflow-hidden">
+        
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 pointer-events-none select-none">
+            <img src="{{ asset('img/logo-ansor.png') }}" class="w-[300px] md:w-[600px] opacity-[0.05] grayscale" alt="Watermark Ansor">
+        </div>
+
         <div class="max-w-5xl mx-auto text-center relative z-10">
+
+            <div class="flex flex-col items-center justify-center mb-8 animate-fade-in-down">
+                
+                <img src="{{ asset('img/logo-ansor.png') }}" class="h-16 md:h-24 w-auto drop-shadow-sm hover:scale-105 transition-transform duration-500 mb-5" alt="Logo GP Ansor">
+
+                <h2 class="font-heading font-bold text-slate-500 text-[10px] md:text-xs tracking-[0.25em] uppercase text-center leading-relaxed">
+                    Pimpinan Cabang Gerakan Pemuda Ansor<br>
+                    <span class="text-emerald-700 font-black text-xs md:text-sm mt-1 block">Kabupaten Tulungagung</span>
+                </h2>
+            </div>
 
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 animate-fade-in-up">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -110,7 +126,7 @@
             </h1>
 
             <div class="max-w-3xl mx-auto mb-8">
-                <div class="bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl p-4 md:p-6 shadow-sm">
+                <div class="bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
                     <p class="text-sm md:text-lg text-slate-700 leading-relaxed font-medium">
                         <span class="font-bold text-emerald-600">S</span>istem
                         <span class="font-bold text-emerald-600">A</span>plikasi
@@ -127,8 +143,9 @@
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-4 w-full px-4">
-                <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 py-4 bg-slate-900 text-white rounded-xl font-bold uppercase tracking-wide hover:bg-black transition shadow-xl hover:-translate-y-1">
-                    Gabung Sekarang
+                <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 py-4 bg-slate-900 text-white rounded-xl font-bold uppercase tracking-wide hover:bg-emerald-800 transition shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2">
+                    <span>Gabung Sekarang</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </a>
                 <a href="#filosofi" class="w-full sm:w-auto px-8 py-4 bg-white text-slate-800 border border-slate-200 rounded-xl font-bold uppercase tracking-wide hover:border-emerald-300 hover:text-emerald-700 transition shadow-md hover:-translate-y-1">
                     Pelajari Filosofi
@@ -267,10 +284,11 @@
     <footer class="bg-white border-t border-slate-200 py-8 px-4">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('img/logo-view.png') }}" class="h-8 w-auto grayscale opacity-40" alt="Logo">
+                <img src="{{ asset('img/logo-ansor.png') }}" class="h-10 w-auto grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-300" alt="Logo Ansor Footer">
+                
                 <div class="text-left">
                     <p class="text-xs font-black text-slate-400 uppercase tracking-widest">SATRIA TULUNGAGUNG</p>
-                    <p class="text-[10px] text-slate-400">PC GP Ansor Kabupaten Tulungagung</p>
+                    <p class="text-[10px] text-slate-500 font-bold mt-0.5">PC GP Ansor Kabupaten Tulungagung</p>
                 </div>
             </div>
             <p class="text-xs text-slate-400 font-medium text-center md:text-right">
@@ -280,7 +298,6 @@
     </footer>
 
     <script>
-        // Mobile Menu Toggle
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
 
@@ -288,14 +305,12 @@
             menu.classList.toggle('hidden');
         });
 
-        // Close menu when clicking link
         document.querySelectorAll('#mobile-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 menu.classList.add('hidden');
             });
         });
 
-        // Navbar Shadow on Scroll
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 10) {
