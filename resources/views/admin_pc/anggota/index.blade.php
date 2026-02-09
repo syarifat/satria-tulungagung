@@ -156,8 +156,14 @@
                                 <td class="px-6 py-5">
                                     <div class="text-xs font-bold text-slate-700">{{ $agt->organisasiUnit->nama }}</div>
                                     <div class="text-[10px] text-slate-400 font-medium italic capitalize mt-0.5 flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full {{ $agt->organisasiUnit->level == 'pac' ? 'bg-orange-400' : 'bg-blue-400' }}"></span>
-                                        {{ $agt->organisasiUnit->level == 'pac' ? 'Kecamatan' : 'Ranting Desa' }}
+                                        <span class="w-1.5 h-1.5 rounded-full {{ $agt->organisasiUnit->level == 'pc' ? 'bg-emerald-500' : ($agt->organisasiUnit->level == 'pac' ? 'bg-orange-400' : 'bg-blue-400') }}"></span>
+                                        @if($agt->organisasiUnit->level == 'pc')
+                                        Kabupaten
+                                        @elseif($agt->organisasiUnit->level == 'pac')
+                                        Kecamatan
+                                        @else
+                                        Desa
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="px-8 py-5 text-center">
