@@ -68,8 +68,8 @@
                 </td>
                 <td>
                     {{ $agt->alamat ?? '-' }},
-                    {{ $agt->desa->nama ?? '' }},
-                    {{ $agt->kecamatan->nama ?? '' }}
+                    {{ $agt->desa?->nama ?? '' }},
+                    {{ $agt->kecamatan?->nama ?? '' }}
                 </td>
             </tr>
             @endforeach

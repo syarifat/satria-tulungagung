@@ -19,7 +19,7 @@ class AdminManagerController extends Controller
     {
         // Get users who are admins (admin_pac or admin_pr)
         $query = User::with(['anggota', 'organisasiUnit'])
-            ->whereIn('role', ['admin_pac', 'admin_pr']);
+            ->whereIn('role', ['admin_pc', 'admin_pac', 'admin_pr']);
 
         // Filter by PAC/PR if needed
         if ($request->search) {
@@ -90,7 +90,11 @@ class AdminManagerController extends Controller
         $organisasiUnit = $anggota->organisasiUnit;
 
         // Determine New Role
-        if ($organisasiUnit->level === 'pac') {
+        if ($organisasiUnit->level === 'pc') {
+            $newRole = 'admin_pc';
+            // Assuming appropriate jabatan ID for Admin PC
+            $jabatanId = 1; // Sesuaikan dengan ID Jabatan Ketua/Admin PC
+        } elseif ($organisasiUnit->level === 'pac') {
             $newRole = 'admin_pac';
             // Assuming ID 2 is Ketua PAC as per previous controller
             $jabatanId = 2;
@@ -99,7 +103,7 @@ class AdminManagerController extends Controller
             // Assuming ID 3 is Ketua Ranting
             $jabatanId = 3;
         } else {
-            return back()->with('error', 'Anggota PC tidak bisa dijadikan admin unit via menu ini.');
+            return back()->with('error', 'Level unit tidak valid.');
         }
 
         // Check if unit already has admin
@@ -131,7 +135,7 @@ class AdminManagerController extends Controller
     {
         $user = User::findOrFail($userId);
 
-        if (!in_array($user->role, ['admin_pac', 'admin_pr'])) {
+        if (!in_array($user->role, ['admin_pc', 'admin_pac', 'admin_pr'])) {
             return back()->with('error', 'User ini bukan admin unit.');
         }
 

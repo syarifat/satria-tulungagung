@@ -99,8 +99,12 @@
                                 </td>
                                 <td class="px-6 py-5 text-center">
                                     <span class="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border 
-                                        {{ $admin->role == 'admin_pac' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100' }}">
-                                        {{ $admin->role == 'admin_pac' ? 'Admin Kecamatan' : 'Admin Ranting' }}
+                                        @if($admin->role == 'admin_pc') bg-purple-50 text-purple-600 border-purple-100
+                                        @elseif($admin->role == 'admin_pac') bg-indigo-50 text-indigo-600 border-indigo-100
+                                        @else bg-emerald-50 text-emerald-600 border-emerald-100 @endif">
+                                        @if($admin->role == 'admin_pc') Admin Cabang
+                                        @elseif($admin->role == 'admin_pac') Admin Kecamatan
+                                        @else Admin Ranting @endif
                                     </span>
                                 </td>
                                 <td class="px-8 py-5 text-center">
