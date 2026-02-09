@@ -34,10 +34,10 @@
 
             {{-- 2. FILTER CARD (REDESIGNED) --}}
             <div class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 p-1">
-                <form action="{{ route('admin_pc.anggota.index') }}" method="GET" class="p-6 md:p-8">
+                <form action="{{ route('admin_pc.anggota.index') }}" method="GET" class="p-6 md:p-8" id="filterForm">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
 
-                        {{-- Search Input (Lebar) --}}
+                        {{-- Search Input --}}
                         <div class="lg:col-span-4 space-y-2">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Pencarian</label>
                             <div class="relative group">
@@ -52,21 +52,23 @@
                             </div>
                         </div>
 
-                        {{-- Filter PAC --}}
+                        {{-- Scope Filter --}}
                         <div class="lg:col-span-3 space-y-2">
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Filter PAC</label>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Lingkup Data</label>
                             <div class="relative group">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <svg class="h-5 w-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
                                     </svg>
                                 </div>
-                                <select name="pac_id" onchange="this.form.submit()"
+                                <select name="scope_type" id="scopeType" onchange="toggleFilters()"
                                     class="w-full pl-11 pr-10 py-3.5 bg-slate-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-2xl text-sm font-bold text-slate-700 cursor-pointer appearance-none transition-all">
-                                    <option value="">Semua Kecamatan</option>
-                                    @foreach($allPacs as $pac)
-                                    <option value="{{ $pac->id }}" {{ request('pac_id') == $pac->id ? 'selected' : '' }}>{{ $pac->nama }}</option>
-                                    @endforeach
+                                    <option value="all" {{ request('scope_type') == 'all' ? 'selected' : '' }}>Semua Data</option>
+                                    <option value="pc_only" {{ request('scope_type') == 'pc_only' ? 'selected' : '' }}>Hanya Pengurus PC</option>
+                                    <option value="pac_all" {{ request('scope_type') == 'pac_all' ? 'selected' : '' }}>Semua Pengurus PAC</option>
+                                    <option value="pac_specific" {{ request('scope_type') == 'pac_specific' ? 'selected' : '' }}>PAC Tertentu (Pilih)</option>
+                                    <option value="pr_all" {{ request('scope_type') == 'pr_all' ? 'selected' : '' }}>Semua Pengurus Ranting</option>
+                                    <option value="pr_specific" {{ request('scope_type') == 'pr_specific' ? 'selected' : '' }}>Ranting Tertentu (Pilih)</option>
                                 </select>
                                 <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                     <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,25 +78,55 @@
                             </div>
                         </div>
 
-                        {{-- Filter Ranting --}}
+                        {{-- Dynamic Filters --}}
                         <div class="lg:col-span-3 space-y-2">
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Filter Ranting</label>
-                            <div class="relative group">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            {{-- Placeholder jika tidak ada filter tambahan --}}
+                            <div id="noFilterPlaceholder" class="hidden h-full flex items-center">
+                                <span class="text-xs text-slate-400 italic">Tidak ada filter tambahan</span>
+                            </div>
+
+                            {{-- Filter PAC (Muncul jika scope_type == pac_specific) --}}
+                            <div id="pacFilter" class="hidden relative group">
+                                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1 mb-2 block">Pilih PAC</label>
+                                <div class="absolute top-8 inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    </svg>
+                                </div>
+                                <select name="pac_id"
+                                    class="w-full pl-11 pr-10 py-3.5 bg-slate-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-2xl text-sm font-bold text-slate-700 cursor-pointer appearance-none transition-all">
+                                    <option value="">Pilih Salah Satu PAC...</option>
+                                    @foreach($allPacs as $pac)
+                                    <option value="{{ $pac->id }}" {{ request('pac_id') == $pac->id ? 'selected' : '' }}>PAC {{ $pac->nama }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="absolute top-8 inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                    <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {{-- Filter Ranting (Muncul jika scope_type == pr_specific) --}}
+                            <div id="prFilter" class="hidden relative group">
+                                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1 mb-2 block">Pilih Ranting</label>
+                                <div class="absolute top-8 inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
                                 </div>
-                                <select name="pr_id" {{ empty($prs) ? 'disabled' : '' }}
-                                    class="w-full pl-11 pr-10 py-3.5 bg-slate-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-2xl text-sm font-bold text-slate-700 cursor-pointer appearance-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed">
-                                    <option value="">Semua Desa/Kelurahan</option>
-                                    @if(!empty($prs))
-                                    @foreach($prs as $pr)
-                                    <option value="{{ $pr->id }}" {{ request('pr_id') == $pr->id ? 'selected' : '' }}>{{ $pr->nama }}</option>
+                                <select name="pr_id"
+                                    class="w-full pl-11 pr-10 py-3.5 bg-slate-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-2xl text-sm font-bold text-slate-700 cursor-pointer appearance-none transition-all">
+                                    <option value="">Pilih Salah Satu Ranting...</option>
+                                    @foreach($allRantings as $pacName => $rantings)
+                                    <optgroup label="PAC {{ $pacName }}">
+                                        @foreach($rantings as $pr)
+                                        <option value="{{ $pr->id }}" {{ request('pr_id') == $pr->id ? 'selected' : '' }}>PR {{ $pr->nama }}</option>
+                                        @endforeach
+                                    </optgroup>
                                     @endforeach
-                                    @endif
                                 </select>
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                <div class="absolute top-8 inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                     <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     </svg>
@@ -120,6 +152,31 @@
 
                     </div>
                 </form>
+
+                <script>
+                    function toggleFilters() {
+                        const scope = document.getElementById('scopeType').value;
+                        const pacFilter = document.getElementById('pacFilter');
+                        const prFilter = document.getElementById('prFilter');
+                        // const placeholder = document.getElementById('noFilterPlaceholder');
+
+                        // Reset Visibility
+                        pacFilter.classList.add('hidden');
+                        prFilter.classList.add('hidden');
+                        // placeholder.classList.add('hidden');
+
+                        if (scope === 'pac_specific') {
+                            pacFilter.classList.remove('hidden');
+                        } else if (scope === 'pr_specific') {
+                            prFilter.classList.remove('hidden');
+                        } else {
+                            // placeholder.classList.remove('hidden');
+                        }
+                    }
+
+                    // Run on load
+                    document.addEventListener('DOMContentLoaded', toggleFilters);
+                </script>
             </div>
 
             {{-- 3. TABLE CARD --}}

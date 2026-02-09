@@ -26,20 +26,40 @@ class AnggotaController extends Controller
             });
         }
 
-        // Filter PAC (Menampilkan anggota PAC tersebut + semua anggota PR di bawahnya)
-        if ($request->pac_id && !$request->pr_id) {
-            $pacId = $request->pac_id;
-            // Ambil semua unit ID yang terkait (PAC itu sendiri + PR di bawahnya)
-            $unitIds = OrganisasiUnit::where('id', $pacId)
-                ->orWhere('parent_id', $pacId)
-                ->pluck('id');
+        // Logic Filter Scope
+        $scope = $request->scope_type ?? 'all';
+        $scopeId = null;
 
-            $query->whereIn('organisasi_unit_id', $unitIds);
+        if ($scope == 'pac_specific') {
+            $scopeId = $request->pac_id;
+        } elseif ($scope == 'pr_specific') {
+            $scopeId = $request->pr_id;
         }
 
-        // Filter PR (Spesifik satu ranting)
-        if ($request->pr_id) {
-            $query->where('organisasi_unit_id', $request->pr_id);
+        switch ($scope) {
+            case 'pc_only':
+                $query->whereHas('organisasiUnit', fn($q) => $q->where('level', 'pc'));
+                break;
+            case 'pac_all':
+                $query->whereHas('organisasiUnit', fn($q) => $q->where('level', 'pac'));
+                break;
+            case 'pac_specific':
+                if ($scopeId) {
+                    // Menampilkan Anggota PAC tsb + Anggota Ranting di bawahnya
+                    $query->where(function ($q) use ($scopeId) {
+                        $q->where('organisasi_unit_id', $scopeId)
+                            ->orWhereHas('organisasiUnit', fn($sub) => $sub->where('parent_id', $scopeId));
+                    });
+                }
+                break;
+            case 'pr_all':
+                $query->whereHas('organisasiUnit', fn($q) => $q->where('level', 'pr'));
+                break;
+            case 'pr_specific':
+                if ($scopeId) {
+                    $query->where('organisasi_unit_id', $scopeId);
+                }
+                break;
         }
 
         // Handle Export PDF
@@ -54,16 +74,14 @@ class AnggotaController extends Controller
         // Data untuk Dropdown Filter
         $allPacs = OrganisasiUnit::where('level', 'pac')->orderBy('nama', 'asc')->get();
 
-        // Data PR (tergantung PAC yang dipilih)
-        $prs = [];
-        if ($request->pac_id) {
-            $prs = OrganisasiUnit::where('parent_id', $request->pac_id)
-                ->where('level', 'pr')
-                ->orderBy('nama', 'asc')
-                ->get();
-        }
+        // Data Semua Ranting (Grouped by PAC for optgroup)
+        $allRantings = OrganisasiUnit::with('parent') // Eager load parent (PAC)
+            ->where('level', 'pr')
+            ->orderBy('nama', 'asc') // Fixed column name
+            ->get()
+            ->groupBy(fn($item) => $item->parent->nama ?? 'Lainnya');
 
-        return view('admin_pc.anggota.index', compact('anggotas', 'allPacs', 'prs'));
+        return view('admin_pc.anggota.index', compact('anggotas', 'allPacs', 'allRantings'));
     }
 
     public function create()
