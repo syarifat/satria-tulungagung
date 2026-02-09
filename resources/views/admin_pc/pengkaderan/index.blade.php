@@ -19,7 +19,7 @@
                     <h3 class="text-3xl font-black text-slate-800 tracking-tight">Data Pelatihan Kader</h3>
                     <p class="text-slate-500 font-medium mt-1">Rekapitulasi riwayat pengkaderan anggota (PKD, PKL, dll).</p>
                 </div>
-                
+
                 {{-- Quick Stat --}}
                 <div class="bg-white px-5 py-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
                     <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
@@ -59,6 +59,7 @@
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Filter PAC</label>
                             <select name="pac_id" class="w-full px-4 py-3.5 bg-slate-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-2xl text-sm font-bold text-slate-700 cursor-pointer transition-all">
                                 <option value="">Semua PAC</option>
+                                <option value="{{ auth()->user()->organisasiUnit->id }}" {{ request('pac_id') == auth()->user()->organisasiUnit->id ? 'selected' : '' }}>Pengurus Cabang (PC)</option>
                                 @foreach($pacUnits as $pac)
                                 <option value="{{ $pac->id }}" {{ request('pac_id') == $pac->id ? 'selected' : '' }}>{{ $pac->nama }}</option>
                                 @endforeach
@@ -111,7 +112,9 @@
                         <details class="group">
                             <summary class="cursor-pointer text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2 hover:text-emerald-600 transition-colors list-none">
                                 <span class="bg-slate-100 rounded-lg p-1 group-open:rotate-90 transition-transform">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
                                 </span>
                                 Filter Tanggal Pelaksanaan
                             </summary>
@@ -168,7 +171,9 @@
                                             </span>
                                         </div>
                                         <div class="flex items-center gap-1.5 text-slate-500">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
                                             <span class="text-[10px] font-bold">{{ $p->tanggal_pelaksanaan->format('d M Y') }}</span>
                                         </div>
                                     </div>

@@ -28,22 +28,23 @@ class PengkaderanController extends Controller
             ->get();
 
         // Build query
-        $query = RiwayatPengkaderan::with(['anggota.organisasiUnit', 'anggota.jabatan'])
-            ->whereHas('anggota.organisasiUnit', function ($q) use ($pcUnit) {
-                $q->where(function ($query) use ($pcUnit) {
-                    // PC level
-                    $query->where('id', $pcUnit->id)
-                        // Or PAC level under this PC
-                        ->orWhere('parent_id', $pcUnit->id)
-                        // Or PR level under PACs of this PC
-                        ->orWhereIn('parent_id', function ($subQuery) use ($pcUnit) {
-                            $subQuery->select('id')
-                                ->from('organisasi_units')
-                                ->where('parent_id', $pcUnit->id)
-                                ->where('level', 'PAC');
-                        });
-                });
+        $query = RiwayatPengkaderan::with(['anggota.organisasiUnit', 'anggota.jabatan']);
+
+        // Since this is Admin PC, they can see ALL pengkaderan within the system (PC Tulungagung scope)
+        // We might want to filter only valid members, but generally, all recorded pengkaderan should be visible.
+
+        // If we strictly want only members under this PC hierarchy (which is usually all members in the app context):
+        $query->whereHas('anggota.organisasiUnit', function ($q) use ($pcUnit) {
+            $q->where(function ($query) use ($pcUnit) {
+                // Include PC, PAC, and PR levels without over-filtering
+                $query->where('id', $pcUnit->id)
+                    ->orWhere('parent_id', $pcUnit->id)
+                    // Include PRs (grandchildren of PC)
+                    ->orWhereHas('parent', function ($sub) use ($pcUnit) {
+                        $sub->where('parent_id', $pcUnit->id);
+                    });
             });
+        });
 
         // Filter by search (nama anggota or jenis pengkaderan)
         if ($request->filled('search')) {
