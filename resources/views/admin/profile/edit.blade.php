@@ -191,32 +191,49 @@
                             <div class="space-y-5">
                                 <div class="flex items-center gap-2 border-b border-gray-100 pb-2 mb-4">
                                     <div class="h-8 w-1 bg-emerald-500 rounded-full"></div>
-                                    <h3 class="text-sm font-black text-emerald-600 uppercase tracking-widest">3. Pendidikan & Pekerjaan</h3>
+                                    <h3 class="text-sm font-black text-emerald-600 uppercase tracking-widest">3. Pendidikan & Ekonomi</h3>
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label class="block font-bold text-xs text-slate-700 ml-1">Pendidikan Terakhir</label>
+                                    <select name="last_education" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
+                                        <option value="SMA" {{ old('last_education', $anggota->last_education) == 'SMA' ? 'selected' : '' }}>SMA/Sederajat</option>
+                                        <option value="D3" {{ old('last_education', $anggota->last_education) == 'D3' ? 'selected' : '' }}>Diploma (D3)</option>
+                                        <option value="S1" {{ old('last_education', $anggota->last_education) == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
+                                        <option value="S2" {{ old('last_education', $anggota->last_education) == 'S2' ? 'selected' : '' }}>Magister (S2)</option>
+                                        <option value="Pesantren" {{ old('last_education', $anggota->last_education) == 'Pesantren' ? 'selected' : '' }}>Pesantren</option>
+                                        <option value="Lainnya" {{ old('last_education', $anggota->last_education) == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                    </select>
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label class="block font-bold text-xs text-slate-700 ml-1">Bidang Usaha</label>
+                                    <select name="business_sector" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
+                                        <option value="" disabled>Pilih Bidang Usaha...</option>
+                                        <option value="Pertanian" {{ old('business_sector', $anggota->business_sector) == 'Pertanian' ? 'selected' : '' }}>Pertanian</option>
+                                        <option value="Peternakan" {{ old('business_sector', $anggota->business_sector) == 'Peternakan' ? 'selected' : '' }}>Peternakan</option>
+                                        <option value="Perikanan" {{ old('business_sector', $anggota->business_sector) == 'Perikanan' ? 'selected' : '' }}>Perikanan</option>
+                                        <option value="Perkebunan" {{ old('business_sector', $anggota->business_sector) == 'Perkebunan' ? 'selected' : '' }}>Perkebunan</option>
+                                        <option value="Jasa" {{ old('business_sector', $anggota->business_sector) == 'Jasa' ? 'selected' : '' }}>Jasa</option>
+                                        <option value="Perdagangan" {{ old('business_sector', $anggota->business_sector) == 'Perdagangan' ? 'selected' : '' }}>Perdagangan</option>
+                                        <option value="Industri Kreatif" {{ old('business_sector', $anggota->business_sector) == 'Industri Kreatif' ? 'selected' : '' }}>Industri Kreatif</option>
+                                        <option value="Teknologi" {{ old('business_sector', $anggota->business_sector) == 'Teknologi' ? 'selected' : '' }}>Teknologi</option>
+                                        <option value="Pariwisata" {{ old('business_sector', $anggota->business_sector) == 'Pariwisata' ? 'selected' : '' }}>Pariwisata</option>
+                                        <option value="Lainnya" {{ old('business_sector', $anggota->business_sector) == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                    </select>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-1.5">
-                                        <label class="block font-bold text-xs text-slate-700 ml-1">Pendidikan Terakhir</label>
-                                        <select name="last_education" class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all cursor-pointer">
-                                            <option value="SMA" {{ old('last_education', $anggota->last_education) == 'SMA' ? 'selected' : '' }}>SMA/Sederajat</option>
-                                            <option value="D3" {{ old('last_education', $anggota->last_education) == 'D3' ? 'selected' : '' }}>Diploma (D3)</option>
-                                            <option value="S1" {{ old('last_education', $anggota->last_education) == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
-                                            <option value="S2" {{ old('last_education', $anggota->last_education) == 'S2' ? 'selected' : '' }}>Magister (S2)</option>
-                                            <option value="Pesantren" {{ old('last_education', $anggota->last_education) == 'Pesantren' ? 'selected' : '' }}>Pesantren</option>
-                                            <option value="Lainnya" {{ old('last_education', $anggota->last_education) == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                        </select>
+                                        <label class="block font-bold text-xs text-slate-700 ml-1">Jenis Usaha</label>
+                                        <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
+                                            type="text" name="business_type" value="{{ old('business_type', $anggota->business_type) }}" placeholder="Contoh: Ternak Lele">
                                     </div>
                                     <div class="space-y-1.5">
-                                        <label class="block font-bold text-xs text-slate-700 ml-1">Pekerjaan Utama</label>
+                                        <label class="block font-bold text-xs text-slate-700 ml-1">Minat Usaha</label>
                                         <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
-                                            type="text" name="job_title" value="{{ old('job_title', $anggota->job_title) }}" placeholder="Guru, Petani, dll">
+                                            type="text" name="business_interest" value="{{ old('business_interest', $anggota->business_interest) }}" placeholder="Minat usaha apa?">
                                     </div>
-                                </div>
-
-                                <div class="space-y-1.5">
-                                    <label class="block font-bold text-xs text-slate-700 ml-1">Alamat Kantor/Usaha (Opsional)</label>
-                                    <input class="block w-full border-gray-200 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 rounded-xl shadow-sm py-3 px-4 text-sm font-medium transition-all"
-                                        type="text" name="job_address" value="{{ old('job_address', $anggota->job_address) }}" placeholder="Kota atau Alamat Tempat Bekerja">
                                 </div>
                             </div>
 
