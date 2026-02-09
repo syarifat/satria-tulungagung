@@ -13,38 +13,39 @@ class PekerjaanController extends Controller
     {
         $query = Anggota::with(['organisasiUnit']);
 
-        // Filter Pencarian (Bisa cari Nama Anggota ATAU Nama Pekerjaan)
+        // Filter Pencarian (Bisa cari Nama Anggota, Bidang, atau Jenis Usaha)
         if ($request->search) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('nama', 'like', "%{$request->search}%")
-                  ->orWhere('job_title', 'like', "%{$request->search}%");
+                    ->orWhere('business_sector', 'like', "%{$request->search}%")
+                    ->orWhere('business_type', 'like', "%{$request->search}%");
             });
         }
 
-        // Filter Spesifik Dropdown Pekerjaan
-        if ($request->job_title) {
-            $query->where('job_title', $request->job_title);
+        // Filter Spesifik Dropdown Bidang Usaha
+        if ($request->business_sector) {
+            $query->where('business_sector', $request->business_sector);
         }
 
         // Ambil data paginasi
-        $anggotas = $query->whereNotNull('job_title') // Hanya yang sudah isi pekerjaan
-                          ->latest()
-                          ->paginate(10)
-                          ->withQueryString();
+        $anggotas = $query->whereNotNull('business_sector') // Hanya yang sudah isi bidang usaha
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
-        // Data Statistik: Top 5 Pekerjaan Terbanyak
-        $topJobs = Anggota::select('job_title', DB::raw('count(*) as total'))
-                    ->whereNotNull('job_title')
-                    ->groupBy('job_title')
-                    ->orderByDesc('total')
-                    ->limit(5)
-                    ->get();
+        // Data Statistik: Top 5 Bidang Usaha Terbanyak
+        $topJobs = Anggota::select('business_sector', DB::raw('count(*) as total'))
+            ->whereNotNull('business_sector')
+            ->groupBy('business_sector')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
 
-        // Data untuk Dropdown Filter (Ambil semua jenis pekerjaan unik)
-        $allJobs = Anggota::whereNotNull('job_title')
-                    ->distinct()
-                    ->orderBy('job_title')
-                    ->pluck('job_title');
+        // Data untuk Dropdown Filter (Ambil semua bidang usaha unik)
+        $allJobs = Anggota::whereNotNull('business_sector')
+            ->distinct()
+            ->orderBy('business_sector')
+            ->pluck('business_sector');
 
         return view('admin_pc.pekerjaan.index', compact('anggotas', 'topJobs', 'allJobs'));
     }
